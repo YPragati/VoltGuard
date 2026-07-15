@@ -27,6 +27,26 @@ C++, Rust, Python, OpenModelica, Scapy, Qt
 
 ## Team Roles
 - Testing, documentation, README, reports, bug fixing, and integration support — maintained by Member 4.
+## How to Run
 
+1. Clone the repository.
+2. Install the required dependencies.
+3. Run the project using:
+   ```
+   python main.py
+   ```
+4. Open the dashboard and monitor the results.
+
+## Testing
+
+- Run the parser module with sample Modbus packets.
+- Test the physics engine using normal and malicious inputs.
+- Verify that unsafe commands are detected and logged.
+
+## Future Improvements
+
+- Improve dashboard UI.
+- Add support for more industrial protocols.
+- Optimize real-time detection performance.
 ## Status
 🚧 Project in progress — Week 1 in development.
