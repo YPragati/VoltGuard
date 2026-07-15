@@ -15,9 +15,19 @@ def process_command(command):
 if __name__ == "__main__":
 
     command = {
-        "rpm": 6000,
+        "rpm": 5000,
         "pressure": 80,
         "flow_rate": 500
     }
 
     print(process_command(command))
+
+    from parser.parser import parse_packet
+
+packet = "sample packet"
+
+parsed_data = parse_packet(packet)
+
+result = process_command(parsed_data)
+
+print(result)
