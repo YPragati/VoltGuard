@@ -15,11 +15,12 @@ def process_command(command):
 if __name__ == "__main__":
 
     command = {
-        "rpm": -5000,
-        "pressure": 80,
-        "flow_rate": 500
+        "rpm": 3000,
+        "pressure": 100,
+        "flow_rate": 5000
     }
 
-    print(process_command(command))
-
-    
+    try:
+        print(process_command(command))
+    except Exception as e:
+        print("Error:", e)
