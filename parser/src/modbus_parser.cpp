@@ -1,5 +1,6 @@
 #include "../include/modbus_parser.hpp"
 #include <iostream>
+#include <fstream>
 
 bool ModbusParser::parsePacket(const unsigned char* data, int length)
 {
@@ -15,6 +16,24 @@ bool ModbusParser::parsePacket(const unsigned char* data, int length)
     int unitId = data[6];
     int functionCode = data[7];
 
+    std::ofstream out("parser/output.json", std::ios::out | std::ios::trunc);
+
+    if (!out.is_open())
+{
+    std::cout << "Failed to open output.json" << std::endl;
+    return false;
+}
+
+std::cout << "output.json opened successfully" << std::endl;
+
+    out << "{\n";
+    out << "  \"transaction_id\": " << transactionId << ",\n";
+    out << "  \"protocol_id\": " << protocolId << ",\n";
+    out << "  \"length\": " << modbusLength << ",\n";
+    out << "  \"unit_id\": " << unitId << ",\n";
+    out << "  \"function_code\": " << functionCode << "\n";
+    out << "}\n";
+    
     std::cout << "Transaction ID: " << transactionId << std::endl;
     std::cout << "Protocol ID: " << protocolId << std::endl;
     std::cout << "Modbus Length: " << modbusLength << std::endl;
@@ -23,6 +42,8 @@ bool ModbusParser::parsePacket(const unsigned char* data, int length)
     
     std::cout << "Packet received." << std::endl;
     std::cout << "Packet Length: " << length << std::endl;
+
+    out.close();
 
     return true;
 }
