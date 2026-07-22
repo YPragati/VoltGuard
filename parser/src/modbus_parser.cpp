@@ -9,13 +9,17 @@ bool ModbusParser::parsePacket(const unsigned char* data, int length)
         std::cout << "Invalid Modbus packet." << std::endl;
         return false;
     }
-
+//-------------
+// MBAP Header
+//-------------
     int transactionId = (data[0] << 8) | data[1];
     int protocolId = (data[2] << 8) | data[3];
     int modbusLength = (data[4] << 8) | data[5];
     int unitId = data[6];
+//-------------    
+//  Modbus PDU 
+//-------------   
     int functionCode = data[7];
-
     int startAddress = (data[8] << 8) | data[9];
     int quantity = (data[10] << 8) | data[11];
 
