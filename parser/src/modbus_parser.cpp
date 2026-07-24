@@ -1,6 +1,7 @@
 #include "../include/modbus_parser.hpp"
 #include <iostream>
 #include <fstream>
+#include <string>
 
 bool ModbusParser::parsePacket(const unsigned char* data, int length)
 {
@@ -20,8 +21,44 @@ bool ModbusParser::parsePacket(const unsigned char* data, int length)
 //  Modbus PDU 
 //-------------   
     int functionCode = data[7];
+    std::string functionName;
+
     int startAddress = (data[8] << 8) | data[9];
     int quantity = (data[10] << 8) | data[11];
+
+    switch (functionCode)
+{
+    case 1:
+        functionName = "Read Coils";
+        break;
+
+    case 2:
+        functionName = "Read Discrete Inputs";
+        break;
+
+    case 3:
+        functionName = "Read Holding Registers";
+        break;
+
+    case 4:
+        functionName = "Read Input Registers";
+        break;
+
+    case 5:
+        functionName = "Write Single Coil";
+        break;
+
+    case 6:
+        functionName = "Write Single Register";
+        break;
+
+    case 16:
+        functionName = "Write Multiple Registers";
+        break;
+
+    default:
+        functionName = "Unknown";
+}
 
     std::ofstream out("parser/output.json", std::ios::out | std::ios::trunc);
 
@@ -39,15 +76,26 @@ std::cout << "output.json opened successfully" << std::endl;
     out << "  \"length\": " << modbusLength << ",\n";
     out << "  \"unit_id\": " << unitId << ",\n";
     out << "  \"function_code\": " << functionCode << ",\n";
+    out << "  \"function_name\": \"" << functionName << "\",\n";
     out << "  \"start_address\": " << startAddress << ",\n";
     out << "  \"quantity\": " << quantity << "\n";
+    
+    std::cout << "DEBUG functionName = " << functionName << std::endl;
+
     out << "}\n";
+    out.flush();
+    out.close();
     
     std::cout << "Transaction ID: " << transactionId << std::endl;
     std::cout << "Protocol ID: " << protocolId << std::endl;
     std::cout << "Modbus Length: " << modbusLength << std::endl;
     std::cout << "Unit ID: " << unitId << std::endl;
-    std::cout << "Function Code: " << functionCode << std::endl;
+
+    std::cout << "Function Code: "
+          << functionCode
+          << " (" << functionName << ")"
+          << std::endl;
+
     std::cout << "Starting Address: " << startAddress << std::endl;
     std::cout << "Quantity: " << quantity << std::endl;
     

@@ -4,6 +4,7 @@
   "length": 6,
   "unit_id": 1,
   "function_code": 3,
+  "function_name": "Read Holding Registers",
   "start_address": 0,
   "quantity": 1
 }
