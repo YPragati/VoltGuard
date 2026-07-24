@@ -27,15 +27,22 @@ py -m pytest tests/ -v
 
 ---
 
-## Test Cases — Physics Engine ✅ (Automated)
+## Test Cases — Physics Engine ✅ (Automated — 10/10 Passing)
 
 | Test ID | Test Name | Description | Status |
 |---------|-----------|--------------|--------|
-| test_safe | Safe command | Verifies a normal, safe command is approved with no alert | ✅ Pass |
-| test_danger_rpm | Dangerous RPM | Verifies a command requesting over-limit RPM is flagged as unsafe | ✅ Pass |
-| test_warning_low_pressure | Low pressure warning | Verifies a low-pressure condition is correctly flagged | ✅ Pass |
+| test_safe | Safe command | Normal safe command approved, no alert | ✅ Pass |
+| test_danger_rpm | Dangerous RPM | Over-limit RPM (9000) flagged as DANGER | ✅ Pass |
+| test_warning_low_pressure | Low pressure warning | Pressure below MIN_PRESSURE flagged as WARNING | ✅ Pass |
+| test_danger_high_pressure | High pressure danger | Pressure above MAX_PRESSURE flagged as DANGER | ✅ Pass |
+| test_warning_high_flow_rate | High flow rate warning | Flow rate above MAX_FLOW_RATE flagged as WARNING | ✅ Pass |
+| test_boundary_rpm_at_limit | RPM boundary | RPM exactly at MAX_RPM (5000) still SAFE | ✅ Pass |
+| test_boundary_pressure_at_max | Pressure upper boundary | Pressure exactly at MAX_PRESSURE (120.0) still SAFE | ✅ Pass |
+| test_boundary_pressure_at_min | Pressure lower boundary | Pressure exactly at MIN_PRESSURE (20.0) still SAFE | ✅ Pass |
+| test_boundary_flow_rate_at_max | Flow rate boundary | Flow rate exactly at MAX_FLOW_RATE (1000.0) still SAFE | ✅ Pass |
+| test_danger_rpm_takes_priority | Priority logic | When multiple limits breached, RPM check takes priority, returns DANGER | ✅ Pass |
 
-**Result: 3/3 tests PASSED** (run via `pytest tests/test_physics.py -v`)
+**Result: 10/10 tests PASSED** ✅ (run via `py -m pytest tests/test_physics.py -v`)
 
 ## Test Cases — Packet Interceptor (Manual — In Progress)
 
@@ -63,14 +70,6 @@ py -m pytest tests/ -v
 | TC-14 | Multiple alerts in sequence | All alerts logged correctly, no UI freeze | ⬜ Pending |
 
 ---
-
-## Mid-Project Review — Test Summary (as of 27 July 2026)
-
-- **Physics Engine:** 3/3 automated unit tests PASSED ✅
-- **Packet Interceptor:** Manual testing in progress
-- **Decision Engine:** Manual testing in progress
-- **Dashboard:** Manual testing in progress
-- **Known bugs / issues:** See [GitHub Issues](https://github.com/YPragati/VoltGuard/issues)
 
 ## Notes
 - Physics Engine has automated unit tests in `tests/test_physics.py`, run using pytest.
