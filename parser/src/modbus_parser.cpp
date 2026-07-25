@@ -24,7 +24,16 @@ bool ModbusParser::parsePacket(const unsigned char* data, int length)
     std::string functionName;
 
     int startAddress = (data[8] << 8) | data[9];
-    int quantity = (data[10] << 8) | data[11];
+
+int value;
+if (functionCode == 6)
+{
+    value = (data[10] << 8) | data[11];
+}
+else
+{
+    value = (data[10] << 8) | data[11]; // Quantity for read requests
+}
 
     switch (functionCode)
 {
@@ -77,8 +86,16 @@ std::cout << "output.json opened successfully" << std::endl;
     out << "  \"unit_id\": " << unitId << ",\n";
     out << "  \"function_code\": " << functionCode << ",\n";
     out << "  \"function_name\": \"" << functionName << "\",\n";
-    out << "  \"start_address\": " << startAddress << ",\n";
-    out << "  \"quantity\": " << quantity << "\n";
+   out << "  \"start_address\": " << startAddress << ",\n";
+
+if (functionCode == 6)
+{
+    out << "  \"register_value\": " << value << "\n";
+}
+else
+{
+    out << "  \"quantity\": " << value << "\n";
+}
     
     std::cout << "DEBUG functionName = " << functionName << std::endl;
 
@@ -97,7 +114,16 @@ std::cout << "output.json opened successfully" << std::endl;
           << std::endl;
 
     std::cout << "Starting Address: " << startAddress << std::endl;
-    std::cout << "Quantity: " << quantity << std::endl;
+    if (functionCode == 6)
+{
+    std::cout << "Register Address: " << startAddress << std::endl;
+    std::cout << "Register Value: " << value << std::endl;
+}
+else
+{
+    std::cout << "Starting Address: " << startAddress << std::endl;
+    std::cout << "Quantity: " << value << std::endl;
+}
     
     std::cout << "Packet received." << std::endl;
     std::cout << "Packet Length: " << length << std::endl;

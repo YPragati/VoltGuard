@@ -3,8 +3,8 @@
   "protocol_id": 0,
   "length": 6,
   "unit_id": 1,
-  "function_code": 3,
-  "function_name": "Read Holding Registers",
-  "start_address": 0,
-  "quantity": 1
+  "function_code": 6,
+  "function_name": "Write Single Register",
+  "start_address": 16,
+  "register_value": 255
 }
