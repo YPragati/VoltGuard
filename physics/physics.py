@@ -24,3 +24,9 @@ if __name__ == "__main__":
         print(process_command(command))
     except Exception as e:
         print("Error:", e)
+
+        # Validate input values
+validate_command(command)
+
+# Run the physics simulation
+return evaluate(...)

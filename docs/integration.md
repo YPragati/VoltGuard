@@ -1,21 +1,24 @@
-# VoltGuard Physics Engine Integration
+Physics Module Integration Guide
 
-## Input
+Input:
+- rpm
+- pressure
+- flow_rate
 
-The physics engine accepts a Python dictionary with:
-
-```json
-{
-    "rpm": 3500,
-    "pressure": 80,
-    "flow_rate": 500
-}
-```
-
-## Output
-
-The engine returns one of:
-
+Output:
 - SAFE
 - WARNING
 - DANGER
+
+How to Run:
+python -m physics.physics
+
+Example Input:
+{
+  "rpm": 5000,
+  "pressure": 80,
+  "flow_rate": 500
+}
+
+Expected Output:
+SAFE
