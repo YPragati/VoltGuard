@@ -1,3 +1,4 @@
+from physics.physics import process_command
 import sys
 from PyQt5.QtWidgets import (
     QApplication,
@@ -50,7 +51,6 @@ window.setLayout(layout)
 window.show()
 
 sys.exit(app.exec_())
-
 
 layout.addWidget(refresh_button)
 
