@@ -51,11 +51,3 @@ window.setLayout(layout)
 window.show()
 
 sys.exit(app.exec_())
-
-layout.addWidget(refresh_button)
-
-window.setLayout(layout)
-
-window.show()
-
-sys.exit(app.exec_())
