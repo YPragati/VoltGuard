@@ -1,71 +1,139 @@
-# User Guide — VoltGuard
+# User Guide
 
-**For:** Plant operators / non-technical users of the VoltGuard dashboard
-**Maintained by:** Member 3 (Documentation)
+## Project Name
 
-> This guide will be filled in as the Native Dashboard (Week 2–4) is built. Structure is ready now so it can be completed incrementally instead of all at once at the end.
-
----
-
-## 1. What is VoltGuard?
-
-VoltGuard is a safety system that watches industrial network commands (sent to equipment like pumps and valves) and blocks any command that would push the equipment outside safe physical limits — before it ever reaches the machine.
-
-You don't need to understand the technical details to use the dashboard. This guide covers what you'll see on screen and what to do when an alert appears.
+VoltGuard – Physics-Aware ICS/SCADA Intrusion Detection System
 
 ---
 
-## 2. Getting Started
+# Introduction
 
-_(To be completed once the dashboard exists)_
-
-- How to open the dashboard
-- What you'll see when it starts up
-- Basic layout overview (screenshot placeholder)
+VoltGuard is a Physics-Aware Intrusion Detection System designed to monitor Industrial Control Systems (ICS) and SCADA environments. The project helps detect abnormal activities while providing an easy-to-use dashboard for monitoring and analysis.
 
 ---
 
-## 3. Understanding the Dashboard
+# System Requirements
 
-_(To be completed alongside Week 2–3 dashboard development)_
+## Hardware
 
-- **Traffic Log** — what it shows
-- **Blocked Commands panel** — what it means when a command appears here
-- **Physical Stress Graphs** — how to read "predicted vs actual" state
+- Minimum 4 GB RAM
+- Intel i3 Processor or above
+- 2 GB Free Storage
 
----
+## Software
 
-## 4. What to Do When You See an Alert
-
-_(To be completed once the alerting/blocking logic — Week 3 — is built)_
-
-1. 
-2. 
-3. 
-
----
-
-## 5. Frequently Asked Questions
-
-**Q: Does VoltGuard need an internet connection?**
-A: No — it's designed to run fully offline/air-gapped.
-
-**Q: What happens to a blocked command?**
-A: _(to be filled in)_
-
-**Q: Who do I contact if something looks wrong?**
-A: _(to be filled in with team/support contact)_
+- Windows 10/11
+- Python 3.x
+- Visual Studio Code
+- Git
+- GitHub
+- Google Chrome or Microsoft Edge
 
 ---
 
-## 6. Glossary
+# Installation
 
-| Term | Meaning |
-|------|---------|
-| Modbus/DNP3 | Communication protocols used by industrial equipment |
-| ICS/SCADA | Industrial Control Systems / Supervisory Control and Data Acquisition — the systems VoltGuard protects |
-| Physics Firewall | VoltGuard's core concept: checking commands against a physics simulation before allowing them |
+1. Clone the repository.
+
+```bash
+git clone <repository-url>
+```
+
+2. Open the project folder.
+
+3. Install the required dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Run the application.
+
+```bash
+python app.py
+```
 
 ---
 
-*Update each section as the corresponding feature is built — don't wait until Week 4 to write this all at once.*
+# Features
+
+- Intrusion Detection
+- Dashboard Monitoring
+- Event Analysis
+- Documentation
+- Weekly Reports
+- Testing Reports
+- Bug Reports
+
+---
+
+# Project Structure
+
+```
+Project
+│
+├── README.md
+├── CHANGELOG.md
+├── USER_GUIDE.md
+├── TESTING_REPORT.md
+├── BUG_REPORT.md
+├── WEEKLY_REPORT.md
+└── Source Code
+```
+
+---
+
+# How to Use
+
+1. Launch the application.
+2. Open the dashboard.
+3. Monitor system activities.
+4. Review alerts if abnormal activity is detected.
+5. Refer to reports for project documentation.
+
+---
+
+# Troubleshooting
+
+### Application does not start
+
+- Verify Python is installed.
+- Install all required packages.
+- Check the terminal for errors.
+
+### Dashboard not loading
+
+- Restart the application.
+- Verify all project files are present.
+
+### GitHub Issues
+
+- Ensure you are working on the correct branch.
+- Pull the latest changes before pushing updates.
+
+---
+
+# Documentation
+
+The project includes:
+
+- README.md
+- CHANGELOG.md
+- TESTING_REPORT.md
+- BUG_REPORT.md
+- WEEKLY_REPORT.md
+- USER_GUIDE.md
+
+---
+
+# Support
+
+For project-related queries, contact the project team through the GitHub repository.
+
+---
+
+# Version
+
+Version: 1.0.0
+
+Status: Final Release
