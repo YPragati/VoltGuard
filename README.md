@@ -24,12 +24,34 @@ VoltGuard acts as a **"Physics Firewall."** It reads incoming industrial network
 - **Native Dashboard (C++/Qt):** Offline desktop dashboard for operators to view blocked commands and system health.
 
 
+
 ## 🛠 Tech Stack
 
-- Python 3
+### Languages
+- Python
+
+### GUI Framework
 - PyQt5
-- Git & GitHub
+
+### Version Control
+- Git
+- GitHub
+
+### Development Environment
+- Visual Studio Code
+- PowerShell
+
+### Programming Concepts
 - Object-Oriented Programming (OOP)
+- Modular Programming
+
+### Python Libraries
+- PyQt5
+- sys
+- os
+- datetime
+- json
+
 
 
 # 📂 Project Structure
