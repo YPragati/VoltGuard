@@ -61,16 +61,19 @@ py -m pytest tests/ -v
 | TC-10 | Safe command from Physics Engine | Packet allowed through | ⬜ Pending |
 | TC-11 | High packet volume (stress test) | No latency breach, no crash | ⬜ Pending |
 
-## Test Cases — Dashboard (Manual — In Progress)
+## Test Cases — Dashboard ✅ (Manual — Completed)
 
 | Test ID | Input | Expected Output | Status |
 |---------|-------|------------------|--------|
-| TC-12 | Blocked command event | Displayed in dashboard log with timestamp | ⬜ Pending |
-| TC-13 | Normal system status | Green/OK status shown | ⬜ Pending |
-| TC-14 | Multiple alerts in sequence | All alerts logged correctly, no UI freeze | ⬜ Pending |
+| TC-12 | Blocked command event | Displayed in dashboard log with timestamp | ✅ Pass |
+| TC-13 | Normal system status | Green/OK (SAFE) status shown correctly | ✅ Pass |
+| TC-14 | Multiple alerts in sequence | All alerts (SAFE/WARNING/DANGER) logged correctly in Event Log panel, no UI freeze | ✅ Pass |
+
+**Result: 3/3 manual dashboard tests PASSED** ✅
+Verified by manually running `python dashboard/dashboard.py` and observing the Event Log panel respond correctly to changing RPM, Pressure, and Flow Rate values with SAFE (🟢) / WARNING (🟡) / DANGER (🔴) status, correct timestamps, and no crashes.
 
 ---
 
 ## Notes
-- Physics Engine has automated unit tests in `tests/test_physics.py`, run using pytest.
-- Parser, Decision Engine, and Dashboard modules are being verified manually; automated test files to be added next.
+- Physics Engine has automated unit tests in `tests/test_physics.py`, run using pytest (10/10 passing).
+- Dashboard has
