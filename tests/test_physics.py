@@ -11,6 +11,7 @@ def test_warning_low_pressure():
 
 def test_danger_high_pressure():
     assert evaluate(rpm=3000, pressure=150, flow_rate=200) == "DANGER"
+
 def test_warning_high_flow_rate():
     assert evaluate(rpm=3000, pressure=100, flow_rate=1500) == "WARNING"
 
