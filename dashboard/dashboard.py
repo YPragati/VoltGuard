@@ -2,6 +2,10 @@ import sys
 import os
 
 from datetime import datetime
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 from PyQt5.QtCore import Qt, QTimer
 
 
@@ -298,6 +302,37 @@ log_box.setLayout(log_layout)
 
 right_layout.addWidget(log_box,2)
 
+# ============================
+# Live Sensor Graph
+# ============================
+
+graph_box = QGroupBox("📈 Live Sensor Graph")
+
+
+
+graph_layout = QVBoxLayout()
+
+figure = Figure(figsize=(8,4))
+
+canvas = FigureCanvas(figure)
+
+ax = figure.add_subplot(111)
+
+# Store graph data
+rpm_history = []
+pressure_history = []
+flow_history = []
+
+
+graph_layout.addWidget(canvas)
+
+graph_box.setLayout(graph_layout)
+
+left_layout.addWidget(graph_box)
+
+
+
+
 
 def update_clock():
     clock.setText("🕒 " + datetime.now().strftime("%d %b %Y   %H:%M:%S"))
@@ -324,6 +359,37 @@ def refresh_data():
         rpm_bar.setValue(command["rpm"])
         pressure_bar.setValue(command["pressure"])
         flow_bar.setValue(command["flow_rate"])
+
+
+        # Store latest values
+        rpm_history.append(command["rpm"])
+        pressure_history.append(command["pressure"])
+        flow_history.append(command["flow_rate"])
+
+
+        # Keep only last 10 readings
+        rpm_history[:] = rpm_history[-10:]
+        pressure_history[:] = pressure_history[-10:]
+        flow_history[:] = flow_history[-10:]
+
+        # Draw graph
+        ax.clear()
+
+        ax.plot(rpm_history, label="RPM", color="blue", linewidth=2)
+        ax.plot(pressure_history, label="Pressure", color="orange", linewidth=2)
+        ax.plot(flow_history, label="Flow Rate", color="green", linewidth=2)
+
+        ax.set_title("Live Sensor Trends")
+        ax.legend()
+        ax.grid(True)
+
+        canvas.draw()
+        
+
+
+
+
+
 
         # Update sensor values
         rpm_value.setText(f"RPM : {command['rpm']}")
