@@ -1,0 +1,10 @@
+{
+  "transaction_id": 1,
+  "protocol_id": 0,
+  "length": 6,
+  "unit_id": 1,
+  "function_code": 6,
+  "function_name": "Write Single Register",
+  "start_address": 16,
+  "register_value": 255
+}
