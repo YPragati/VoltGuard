@@ -348,9 +348,9 @@ def refresh_data():
     try:
 
         command = {
-            "rpm": int(rpm_input.text()),
-            "pressure": int(pressure_input.text()),
-            "flow_rate": int(flow_input.text())
+            "rpm": int(rpm_input.text() or 0),
+            "pressure": int(pressure_input.text() or 0),
+            "flow_rate": int(flow_input.text() or 0)
         }
 
         status = process_command(command)
@@ -375,9 +375,9 @@ def refresh_data():
         # Draw graph
         ax.clear()
 
-        ax.plot(rpm_history, label="RPM", color="blue", linewidth=2)
-        ax.plot(pressure_history, label="Pressure", color="orange", linewidth=2)
-        ax.plot(flow_history, label="Flow Rate", color="green", linewidth=2)
+        ax.plot(rpm_history, marker="o",label="RPM", color="blue", linewidth=2)
+        ax.plot(pressure_history,marker="o", label="Pressure", color="orange", linewidth=2)
+        ax.plot(flow_history,marker="o", label="Flow Rate", color="green", linewidth=2)
 
         ax.set_title("Live Sensor Trends")
         ax.legend()
