@@ -212,12 +212,6 @@ docs/integration.md
 
 ---
 
-
-
-- Improve dashboard UI.
-- Add support for more industrial protocols.
-- Optimize real-time detection performance.
-- 
 ## Status
 ## 📌 Status
 
