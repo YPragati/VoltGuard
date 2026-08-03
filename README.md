@@ -1,8 +1,8 @@
 
-#VoltGuard
+# ⚡ VoltGuard
 
 
-#VoltGuard is an industrial machine-monitoring and safety system developed in Python. The project monitors machine parameters, analyses them using a physics-based decision engine, and displays the machine condition through an interactive PyQt5 dashboard.
+VoltGuard is an industrial machine-monitoring and safety system developed in Python. The project monitors machine parameters, analyses them using a physics-based decision engine, and displays the machine condition through an interactive PyQt5 dashboard.
 
 The system classifies machine health into:
 
@@ -23,11 +23,13 @@ VoltGuard acts as a **"Physics Firewall."** It reads incoming industrial network
 - **Decision Engine (Rust):** Fast logic that blocks commands if the simulation predicts failure.
 - **Native Dashboard (C++/Qt):** Offline desktop dashboard for operators to view blocked commands and system health.
 
-## Tech Stack
- Python 3
+
+## 🛠 Tech Stack
+
+- Python 3
 - PyQt5
 - Git & GitHub
-- Object-Oriented Programming
+- Object-Oriented Programming (OOP)
 
 
 # 📂 Project Structure
@@ -183,9 +185,8 @@ Output
 
 | Member | Responsibility |
 |---------|----------------|
-| Team Lead | Git Management, Dashboard Development, Module Integration, Documentation |
 | Member 1 | Packet Parser |
-| Member 2 | Physics Engine |
+| Member 2 (Team Lead) | Physics Engine, Git Management, Dashboard Development, Module Integration, Documentation |
 | Member 3 | Testing & Documentation |
 
 ---
@@ -211,33 +212,7 @@ docs/integration.md
 
 ---
 
-## Development Plan
-| Week | Engineering Focus | Simulation & UI Focus |
-|------|--------------------|------------------------|
-| 1 | Parse mock Modbus traffic, generate test commands | Build basic pressure/fluid physics model |
-| 2 | Connect network parser to physics engine | Build native Qt dashboard foundation |
-| 3 | Build inline packet-blocking logic (sub-10ms) | Add real-time graphs to dashboard |
-| 4 | Deploy on edge device (Raspberry Pi) | Polish UI for factory floor use |
 
-## Team Roles
-- Testing, documentation, README, reports, bug fixing, and integration support — maintained by Member 4.
-## How to Run
-
-1. Clone the repository.
-2. Install the required dependencies.
-3. Run the project using:
-   ```
-   python main.py
-   ```
-4. Open the dashboard and monitor the results.
-
-## Testing
-
-- Run the parser module with sample Modbus packets.
-- Test the physics engine using normal and malicious inputs.
-- Verify that unsafe commands are detected and logged.
-
-## Future Improvements
 
 - Improve dashboard UI.
 - Add support for more industrial protocols.
