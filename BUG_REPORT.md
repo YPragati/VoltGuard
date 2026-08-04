@@ -32,27 +32,4 @@ their status and resolution.
 ## BUG-004: `output.json` causing repeated merge conflicts
 - **Severity:** Minor / process issue
 - **Found in:** Week 4, during branch merges
-- **Description:** `output.json` is a generated runtime output file that is tracked in Git. Since multiple branches (leader, Member-1) each generated their own version locally, merging `main` triggered conflicts on this file twice.
-- **Status:** ⚠️ Open — recommend adding `output.json` to `.gitignore` so generated files stop being tracked and causing conflicts.
-
----
-
-## BUG-005: README role labeling issue
-- **Severity:** Minor
-- **Found in:** Week 4
-- **Description:** README.md had incorrect/outdated role labeling for team members.
-- **Status:** ✅ Resolved — corrected in README.md.
-
----
-
-## Summary
-
-| Bug ID | Severity | Status |
-|--------|----------|--------|
-| BUG-001 | Minor | ✅ Resolved |
-| BUG-002 | Major | ✅ Resolved |
-| BUG-003 | Major | ✅ Resolved |
-| BUG-004 | Minor | ✅ Resolved|
-| BUG-005 | Minor | ✅ Resolved |
-
-**Open issues remaining: 0
+- **Description:** `output.json` is a generated runtime
