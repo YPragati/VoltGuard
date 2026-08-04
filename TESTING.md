@@ -57,6 +57,23 @@ py -m pytest tests/ -v
 
 **Result: 4/4 tests PASSED** ✅ (run via `py -m pytest tests/test_parser.py -v`)
 
+## Test Cases — Validator ✅ (Automated — 9/9 Passing)
+
+| Test ID | Test Name | Description | Status |
+|---------|-----------|--------------|--------|
+| test_valid_command_passes | Valid command | Command with all required fields (rpm, pressure, flow_rate) passes validation | ✅ Pass |
+| test_missing_rpm_raises | Missing RPM | Command without rpm field raises ValueError | ✅ Pass |
+| test_missing_pressure_raises | Missing pressure | Command without pressure field raises ValueError | ✅ Pass |
+| test_missing_flow_rate_raises | Missing flow rate | Command without flow_rate field raises ValueError | ✅ Pass |
+| test_empty_command_raises | Empty command | Completely empty command dict raises ValueError | ✅ Pass |
+| test_negative_rpm_raises | Negative RPM | Negative rpm value raises ValueError | ✅ Pass |
+| test_negative_pressure_raises | Negative pressure | Negative pressure value raises ValueError | ✅ Pass |
+| test_negative_flow_rate_raises | Negative flow rate | Negative flow_rate value raises ValueError | ✅ Pass |
+| test_zero_values_are_allowed | Zero values boundary | rpm/pressure/flow_rate all at 0 currently passes validation (flagged as QA observation — team to confirm whether zero should be treated as a valid physical state) | ✅ Pass |
+
+**Result: 9/9 tests PASSED** ✅ (run via `py -m pytest tests/test_validator.py -v`)
+
+---
 ## Test Cases — Decision Engine ✅ (Automated — 6/6 Passing)
 
 | Test ID | Input | Expected Output | Status |
