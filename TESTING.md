@@ -1,7 +1,7 @@
 # Testing Guide — VoltGuard
 
 This document describes how we test each module of VoltGuard, our test cases, 
-and current test results as of the Mid-Project Review.
+and current test results as of Week 4 (Final Submission).
 
 ## Testing Strategy
 
@@ -46,22 +46,26 @@ py -m pytest tests/ -v
 
 **Result: 10/10 tests PASSED** ✅ (run via `py -m pytest tests/test_physics.py -v`)
 
-## Test Cases — Packet Interceptor (Manual — In Progress)
+## Test Cases — Packet Interceptor ✅ (Automated — 4/4 Passing)
 
 | Test ID | Input | Expected Output | Status |
 |---------|-------|------------------|--------|
-| TC-01 | Valid Modbus TCP packet | Parsed successfully | ⬜ Pending |
-| TC-02 | Malformed hex payload | Rejected with error | ⬜ Pending |
-| TC-03 | Empty/truncated packet | Rejected safely, no crash | ⬜ Pending |
-| TC-04 | Valid DNP3 packet | Parsed successfully | ⬜ Pending |
+| TC-01 | Valid Modbus TCP packet | Parsed successfully | ✅ Pass |
+| TC-02 | Malformed hex payload | Rejected with error | ✅ Pass |
+| TC-03 | Empty/truncated packet | Rejected safely, no crash | ✅ Pass |
+| TC-04 | Valid DNP3 packet | Parsed successfully | ✅ Pass |
 
-## Test Cases — Decision Engine (Manual — In Progress)
+**Result: 4/4 tests PASSED** ✅ (run via `py -m pytest tests/test_parser.py -v`)
+
+## Test Cases — Decision Engine ✅ (Automated — 6/6 Passing)
 
 | Test ID | Input | Expected Output | Status |
 |---------|-------|------------------|--------|
-| TC-09 | Unsafe command from Physics Engine | Packet dropped within 10ms | ⬜ Pending |
-| TC-10 | Safe command from Physics Engine | Packet allowed through | ⬜ Pending |
-| TC-11 | High packet volume (stress test) | No latency breach, no crash | ⬜ Pending |
+| TC-09 | Unsafe command from Physics Engine | Packet dropped within 10ms | ✅ Pass |
+| TC-10 | Safe command from Physics Engine | Packet allowed through | ✅ Pass |
+| TC-11 | High packet volume (stress test) | No latency breach, no crash | ✅ Pass |
+
+**Result: 6/6 tests PASSED** ✅ (run via `py -m pytest tests/test_decision.py -v`)
 
 ## Test Cases — Dashboard ✅ (Manual — Completed)
 
@@ -76,6 +80,17 @@ Verified by manually running `python dashboard/dashboard.py` and observing the E
 
 ---
 
+## Overall Test Summary
+
+| Module | Tests | Result |
+|--------|-------|--------|
+| Decision Engine | 6 | ✅ All Passed |
+| Parser | 4 | ✅ All Passed |
+| Physics Engine | 10 | ✅ All Passed |
+| Validator | 9 | ✅ All Passed |
+| Dashboard (manual) | 3 | ✅ All Passed |
+| **Total (automated)** | **29** | ✅ **29/29 Passed** |
+
 ## Notes
-- Physics Engine has automated unit tests in `tests/test_physics.py`, run using pytest (10/10 passing).
-- Dashboard has
+- Physics Engine, Parser, Decision Engine, and Validator all have automated unit tests, run using pytest (29/29 passing).
+- Dashboard has been fully manually verified for SAFE/WARNING/DANGER flows end-to-end.
