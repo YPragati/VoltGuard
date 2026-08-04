@@ -1,0 +1,12 @@
+{
+  "transaction_id": 1,
+  "protocol_id": 0,
+  "length": 11,
+  "unit_id": 1,
+  "function_code": 16,
+  "function_name": "Write Multiple Registers",
+  "start_address": 16,
+  "quantity": 2,
+  "byte_count": 4,
+  "register_values": [10, 1]
+}
