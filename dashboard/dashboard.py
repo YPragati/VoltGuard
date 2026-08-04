@@ -98,6 +98,8 @@ QTextEdit{
 
 QProgressBar{
     text-align:center;
+    color:white;
+    font-weight:bold;
 }
 """)
 main_layout = QVBoxLayout()
@@ -113,17 +115,6 @@ padding:10px;
 """)
 
 
-logo = QLabel("🛡️ VOLTGUARD")
-logo.setAlignment(Qt.AlignCenter)
-
-logo.setStyleSheet("""
-font-size:20px;
-font-weight:bold;
-color:#22C55E;
-padding:5px;
-""")
-
-main_layout.addWidget(logo)
 
 clock = QLabel()
 clock.setAlignment(Qt.AlignRight)
@@ -249,17 +240,37 @@ health_box = QGroupBox("❤️ Machine Health")
 
 health_layout = QVBoxLayout()
 
+health_layout.setAlignment(Qt.AlignCenter)
+
 health_bar = QProgressBar()
 health_bar.setMaximum(100)
 health_bar.setValue(100)
+health_bar.setFormat("%p%")
+health_bar.setTextVisible(True)
 
-health_layout.addWidget(health_bar)
-
-health_box.setLayout(health_layout)
-health_box.setMaximumHeight(120)
 health_bar.setFixedHeight(35)
 
-right_layout.addWidget(health_box,1)
+health_bar.setStyleSheet("""
+QProgressBar{
+    border:2px solid #555;
+    border-radius:5px;
+    text-align:center;
+    color:white;
+    font-weight:bold;
+}
+
+QProgressBar::chunk{
+    background:#22C55E;
+}
+""")
+
+health_layout.addWidget(health_bar, alignment=Qt.AlignCenter)
+
+health_box.setLayout(health_layout)
+health_box.setFixedHeight(100)
+
+right_layout.addWidget(health_box)
+
 
 
 alarm_box = QGroupBox("🚨 Alarm Panel")
@@ -347,10 +358,15 @@ update_clock()
 def refresh_data():
     try:
 
+        if not rpm_input.text() or not pressure_input.text() or not flow_input.text():
+            status_label.setText("⚪ Waiting for Input")
+            alarm_label.setText("Enter Machine Values")
+            return
+
         command = {
-            "rpm": int(rpm_input.text() or 0),
-            "pressure": int(pressure_input.text() or 0),
-            "flow_rate": int(flow_input.text() or 0)
+            "rpm": int(rpm_input.text()),
+            "pressure": int(pressure_input.text()),
+            "flow_rate": int(flow_input.text())
         }
 
         status = process_command(command)
@@ -391,10 +407,7 @@ def refresh_data():
 
 
 
-        # Update sensor values
-        rpm_value.setText(f"RPM : {command['rpm']}")
-        pressure_value.setText(f"Pressure : {command['pressure']}")
-        flow_value.setText(f"Flow Rate : {command['flow_rate']}")
+        
 
         # Update status, health and alarm
         if status == "SAFE":
@@ -455,11 +468,22 @@ def reset_data():
     pressure_bar.setValue(0)
     flow_bar.setValue(0)
 
-    health_bar.setValue(100)
+    health_bar.setValue(0)
 
     status_label.setText("⚪ READY")
     status_label.setStyleSheet("font-size:32px;font-weight:bold;color:white;")
+    alarm_label.setText("No Active Alarm")
+    alarm_label.setStyleSheet("color:#22C55E;font-size:18px;font-weight:bold;")
 
+    rpm_history.clear()
+    pressure_history.clear()
+    flow_history.clear()
+
+    ax.clear()
+    canvas.draw()
+
+
+    
     log.clear()
 
 
@@ -503,13 +527,7 @@ QProgressBar::chunk{
 }
 """)
 
-rpm_value = QLabel("RPM : 0")
-pressure_value = QLabel("Pressure : 0")
-flow_value = QLabel("Flow Rate : 0")
 
-sensor_layout.addWidget(rpm_value)
-sensor_layout.addWidget(pressure_value)
-sensor_layout.addWidget(flow_value)
 
 
 
