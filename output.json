@@ -8,5 +8,5 @@
   "start_address": 16,
   "quantity": 2,
   "byte_count": 4,
-  "register_values": [10, 1]
+  "register_values": [10, 20]
 }

@@ -1,9 +1,7 @@
 import sys
 import os
-import json
 
 from datetime import datetime
-
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -17,21 +15,6 @@ from PyQt5.QtCore import Qt, QTimer
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from physics.physics import process_command
-
-def load_parser_data():
-
-    with open("parser/output.json", "r") as file:
-        data = json.load(file)
-
-    registers = data["register_values"]
-
-    return {
-        "rpm": registers[0] * 100,
-        "pressure": registers[1],
-        "flow_rate": 500
-    }
-
-
 
 from PyQt5.QtWidgets import (
     QApplication,
@@ -123,17 +106,6 @@ main_layout = QVBoxLayout()
 
 title = QLabel("⚡ VoltGuard Industrial Monitoring System")
 title.setAlignment(Qt.AlignCenter)
-demo_label = QLabel("🔄 DEMO MODE - Automatic Sensor Simulation")
-demo_label.setAlignment(Qt.AlignCenter)
-
-demo_label.setStyleSheet("""
-font-size:14px;
-color:#FACC15;
-font-weight:bold;
-padding:5px;
-""")
-
-main_layout.addWidget(demo_label)
 
 title.setStyleSheet("""
 font-size:28px;
@@ -160,7 +132,49 @@ content_layout = QHBoxLayout()
 
 left_layout = QVBoxLayout()
 right_layout = QVBoxLayout()
+# ============================
+# Machine Parameters
+# ============================
 
+parameter_box = QGroupBox("⚙ Machine Parameters")
+
+parameter_layout = QGridLayout()
+
+parameter_layout.setVerticalSpacing(8)
+parameter_layout.setHorizontalSpacing(12)
+parameter_layout.setContentsMargins(15, 20, 15, 15)
+
+rpm_input = QLineEdit()
+rpm_input.setPlaceholderText("Enter RPM")
+
+pressure_input = QLineEdit()
+pressure_input.setPlaceholderText("Enter Pressure")
+
+flow_input = QLineEdit()
+flow_input.setPlaceholderText("Enter Flow Rate")
+
+parameter_layout.addWidget(QLabel("RPM"),0,0)
+parameter_layout.addWidget(rpm_input,0,1)
+
+parameter_layout.addWidget(QLabel("Pressure"),1,0)
+parameter_layout.addWidget(pressure_input,1,1)
+
+parameter_layout.addWidget(QLabel("Flow Rate"),2,0)
+parameter_layout.addWidget(flow_input,2,1)
+
+parameter_box.setLayout(parameter_layout)
+
+left_layout.addWidget(parameter_box)
+
+button_layout = QHBoxLayout()
+
+check_button = QPushButton("✔ Check Status")
+reset_button = QPushButton("🔄 Reset")
+
+button_layout.addWidget(check_button)
+button_layout.addWidget(reset_button)
+
+left_layout.addLayout(button_layout)
 
 content_layout.addLayout(left_layout,1)
 content_layout.addLayout(right_layout,1)
@@ -229,11 +243,10 @@ health_layout = QVBoxLayout()
 health_layout.setAlignment(Qt.AlignCenter)
 
 health_bar = QProgressBar()
-health_bar.setTextVisible(True)
 health_bar.setMaximum(100)
 health_bar.setValue(100)
 health_bar.setFormat("%p%")
-
+health_bar.setTextVisible(True)
 
 health_bar.setFixedHeight(35)
 
@@ -321,26 +334,6 @@ rpm_history = []
 pressure_history = []
 flow_history = []
 
-# Demo Mode Sensor Values
-demo_index = 0
-
-demo_values = [
-    {
-        "rpm": 1000,
-        "pressure": 50,
-        "flow_rate": 500
-    },
-    {
-        "rpm": 1000,
-        "pressure": 10,
-        "flow_rate": 500
-    },
-    {
-        "rpm": 7000,
-        "pressure": 80,
-        "flow_rate": 500
-    }
-]
 
 graph_layout.addWidget(canvas)
 
@@ -359,23 +352,22 @@ timer = QTimer()
 timer.timeout.connect(update_clock)
 timer.start(1000)
 
-
-
-
-
 update_clock()
 
 
 def refresh_data():
     try:
 
-       
-        global demo_index
+        if not rpm_input.text() or not pressure_input.text() or not flow_input.text():
+            status_label.setText("⚪ Waiting for Input")
+            alarm_label.setText("Enter Machine Values")
+            return
 
-        command = demo_values[demo_index]
-
-        demo_index = (demo_index + 1) % len(demo_values)
-        
+        command = {
+            "rpm": int(rpm_input.text()),
+            "pressure": int(pressure_input.text()),
+            "flow_rate": int(flow_input.text())
+        }
 
         status = process_command(command)
 
@@ -422,7 +414,6 @@ def refresh_data():
             status_label.setText("🟢 SAFE")
             status_label.setStyleSheet("font-size:32px;font-weight:bold;color:#22C55E;")
             health_bar.setValue(100)
-            health_bar.setFormat("Health: 0%")
 
             alarm_label.setText("✅ No Active Alarm")
             alarm_label.setStyleSheet("color:#22C55E;font-size:18px;font-weight:bold;")
@@ -431,7 +422,6 @@ def refresh_data():
             status_label.setText("🟡 WARNING")
             status_label.setStyleSheet("font-size:32px;font-weight:bold;color:#FACC15;")
             health_bar.setValue(60)
-            health_bar.setFormat("Health: 60%")
 
             alarm_label.setText("⚠ Check Machine")
             alarm_label.setStyleSheet("color:#FACC15;font-size:18px;font-weight:bold;")
@@ -440,7 +430,6 @@ def refresh_data():
             status_label.setText("🔴 DANGER")
             status_label.setStyleSheet("font-size:32px;font-weight:bold;color:#EF4444;")
             health_bar.setValue(20)
-            health_bar.setFormat("Health: 20%")
 
             alarm_label.setText("🚨 CRITICAL ALERT")
             alarm_label.setStyleSheet("color:#EF4444;font-size:18px;font-weight:bold;")
@@ -471,8 +460,9 @@ def refresh_data():
 
 
 def reset_data():
-    
-   
+    rpm_input.clear()
+    pressure_input.clear()
+    flow_input.clear()
 
     rpm_bar.setValue(0)
     pressure_bar.setValue(0)
@@ -542,7 +532,8 @@ QProgressBar::chunk{
 
 
 
-
+check_button.clicked.connect(refresh_data)
+reset_button.clicked.connect(reset_data)
 
 left_layout.addWidget(status_box)
 left_layout.addWidget(alarm_box)
@@ -580,20 +571,6 @@ main_layout.addWidget(footer)
 
 window.setLayout(main_layout)
 
-sensor_timer = QTimer()
-sensor_timer.timeout.connect(refresh_data)
-sensor_timer.start(5000)
-
-
-window.setLayout(main_layout)
-
 window.show()
-
-sys.exit(app.exec())
-
-window.show()
-
-
-
 
 sys.exit(app.exec())
