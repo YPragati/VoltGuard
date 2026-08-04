@@ -123,6 +123,17 @@ main_layout = QVBoxLayout()
 
 title = QLabel("⚡ VoltGuard Industrial Monitoring System")
 title.setAlignment(Qt.AlignCenter)
+demo_label = QLabel("🔄 DEMO MODE - Automatic Sensor Simulation")
+demo_label.setAlignment(Qt.AlignCenter)
+
+demo_label.setStyleSheet("""
+font-size:14px;
+color:#FACC15;
+font-weight:bold;
+padding:5px;
+""")
+
+main_layout.addWidget(demo_label)
 
 title.setStyleSheet("""
 font-size:28px;
@@ -149,24 +160,6 @@ content_layout = QHBoxLayout()
 
 left_layout = QVBoxLayout()
 right_layout = QVBoxLayout()
-
-# ============================
-# Machine Parameters
-# ============================
-
-parameter_box = QGroupBox("⚙ Machine Parameters")
-
-parameter_layout = QGridLayout()
-
-parameter_layout.setVerticalSpacing(8)
-parameter_layout.setHorizontalSpacing(12)
-parameter_layout.setContentsMargins(15, 20, 15, 15)
-
-
-
-parameter_box.setLayout(parameter_layout)
-
-left_layout.addWidget(parameter_box)
 
 
 content_layout.addLayout(left_layout,1)
@@ -328,6 +321,26 @@ rpm_history = []
 pressure_history = []
 flow_history = []
 
+# Demo Mode Sensor Values
+demo_index = 0
+
+demo_values = [
+    {
+        "rpm": 1000,
+        "pressure": 50,
+        "flow_rate": 500
+    },
+    {
+        "rpm": 1000,
+        "pressure": 10,
+        "flow_rate": 500
+    },
+    {
+        "rpm": 7000,
+        "pressure": 80,
+        "flow_rate": 500
+    }
+]
 
 graph_layout.addWidget(canvas)
 
@@ -357,9 +370,12 @@ def refresh_data():
     try:
 
        
+        global demo_index
 
-        command =  load_parser_data()
-        print(command)
+        command = demo_values[demo_index]
+
+        demo_index = (demo_index + 1) % len(demo_values)
+        
 
         status = process_command(command)
 
@@ -566,7 +582,7 @@ window.setLayout(main_layout)
 
 sensor_timer = QTimer()
 sensor_timer.timeout.connect(refresh_data)
-sensor_timer.start(2000)
+sensor_timer.start(5000)
 
 
 window.setLayout(main_layout)
