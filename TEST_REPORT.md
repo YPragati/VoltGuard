@@ -1,77 +1,82 @@
-# Testing Report
+# Test Report — VoltGuard
 
 ## Project Name
 VoltGuard – Physics-Aware ICS/SCADA Intrusion Detection System
 
 ## Testing Summary
-
-This report summarizes the testing performed to verify the functionality, stability, and usability of the VoltGuard project.
+This report summarizes the automated and manual testing performed to verify
+the correctness, stability, and integration of the VoltGuard pipeline
+(parser → physics engine → decision engine → dashboard) ahead of the
+Week 4 submission.
 
 ---
 
 ## Test Environment
-
 - Operating System: Windows 11
 - IDE: Visual Studio Code
-- Browser: Google Chrome (Latest Version)
 - Backend: Python
+- Test Framework: pytest
 - Version Control: Git & GitHub
 
 ---
 
-## Functional Testing
+## Automated Test Results
 
-| Test Case | Description | Expected Result | Status |
-|-----------|-------------|----------------|--------|
-| Dashboard Load | Dashboard opens successfully | Dashboard displayed | ✅ Passed |
-| Navigation | All navigation links work | All pages accessible | ✅ Passed |
-| Weekly Reports | Weekly reports accessible | Reports displayed correctly | ✅ Passed |
-| User Guide | User guide available | Opens successfully | ✅ Passed |
-| Documentation | Documentation files present | All files accessible | ✅ Passed |
+| Module | Test File | Tests | Result |
+|--------|-----------|-------|--------|
+| Decision Engine | `tests/test_decision.py` | 6 | ✅ All Passed |
+| Parser | `tests/test_parser.py` | 4 | ✅ All Passed |
+| Physics Engine | `tests/test_physics.py` | 10 | ✅ All Passed |
+| Validator | `tests/test_validator.py` | 9 | ✅ All Passed |
+| **Total** | | **29** | ✅ **29/29 Passed** |
 
----
-
-## Performance Testing
-
-- Application loads successfully.
-- No noticeable delays during navigation.
-- Documentation opens without issues.
-
-Status: ✅ Passed
+Run command:
+```bash
+py -m pytest tests/ -v
+```
 
 ---
 
-## Compatibility Testing
+## Manual / Integration Testing — Dashboard
 
-| Platform | Result |
-|----------|--------|
-| Windows 11 | ✅ Passed |
-| Google Chrome | ✅ Passed |
-| Microsoft Edge | ✅ Passed |
+Full pipeline (parser → physics → decision → dashboard) verified manually
+by feeding commands through the dashboard and observing the Event Log panel.
+
+| Test Case | Input | Expected Result | Status |
+|-----------|-------|------------------|--------|
+| SAFE command | Command within all limits | Dashboard shows ALLOW, 🟢 SAFE status | ✅ Passed |
+| WARNING command | Command near threshold (e.g. low pressure / high flow rate) | Dashboard shows 🟡 WARNING, logged correctly | ✅ Passed |
+| DANGER command | Command over limit (e.g. RPM 9000) | Decision Engine returns BLOCK, dashboard shows 🔴 DANGER + alarm | ✅ Passed |
+| Multiple alerts in sequence | SAFE → WARNING → DANGER back to back | All events logged correctly with timestamps, no UI freeze | ✅ Passed |
+
+**Result: End-to-end pipeline confirmed working — parser output correctly
+flows through physics validation, decision logic, and dashboard display.**
 
 ---
 
-## Documentation Verification
+## Merge / Integration History
 
-Verified the following files:
+| Merge | Description |
+|-------|-------------|
+| Leader branch → main | Dashboard module update |
+| Member-1 branch → main | Modbus/TCP parser (C++ + Python) |
+| Decision module → main | New decision engine added |
 
-- README.md
-- CHANGELOG.md
-- TESTING_REPORT.md
-- BUG_REPORT.md
-- USER_GUIDE.md
-- WEEKLY_REPORT.md
+Commit reference: `3495ba2` — "Merge parser and decision modules, all 29 tests passing"
 
-Status: ✅ Passed
+---
+
+## Issues Found During This Testing Cycle
+
+- `test_physics.py` had an indentation bug — fixed before final run (see `BUG_REPORT.md`).
+- `output.json` caused repeated merge conflicts since it's a generated file
+  tracked in Git — recommended to add it to `.gitignore` (not yet done).
 
 ---
 
 ## Overall Result
 
-All planned testing activities were completed successfully.
+All planned automated and manual testing activities for Week 4 were completed
+successfully. No blocking issues remain open.
 
-No critical issues remain.
-
-Project is ready for submission.
-
-**Final Status:** ✅ PASSED
+**Final Status: ✅ 29/29 Automated Tests Passed | Manual Dashboard Testing Passed**
