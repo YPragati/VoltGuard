@@ -89,23 +89,30 @@ VoltGuard/
 
 # ⚙ System Workflow
 
+The VoltGuard pipeline consists of three main stages:
+
+1. Parser: reads incoming packet data and converts it into machine parameters.
+2. Physics Engine: validates the parameters and evaluates the machine state.
+3. Decision + Dashboard: maps the verdict to an action and shows the result.
+
 ```
-Machine Inputs
+Machine Input / Packet Parser
       │
       ▼
- Packet Parser
+Validated Machine Command
       │
       ▼
- Physics Engine
+Physics Engine / Simulation
       │
       ▼
- Safety Decision
+Verdict: SAFE / WARNING / DANGER
       │
       ▼
- Dashboard Display
+Decision Engine / Action
       │
       ▼
- Event Log & Alarm
+Dashboard Display + Event Log
+```
 
 # 🚀 Features
 

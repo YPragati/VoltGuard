@@ -5,6 +5,8 @@ and current test results as of the Mid-Project Review.
 
 ## Testing Strategy
 
+VoltGuard follows a staged processing workflow that begins with packet parsing, continues through physics validation, and ends with a dashboard decision and display. Testing covers each stage of the pipeline.
+
 | Module | What we test | Test type |
 |--------|--------------|-----------|
 | Packet Interceptor | Correctly parses valid Modbus/DNP3 packets, rejects malformed ones | Unit test |

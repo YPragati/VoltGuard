@@ -12,6 +12,36 @@ VoltGuard is a Physics-Aware Intrusion Detection System designed to monitor Indu
 
 ---
 
+# Project Workflow
+
+VoltGuard processes data through a staged workflow:
+
+1. **Parser** reads raw packet data and converts it to machine parameters.
+2. **Physics Engine** validates values and evaluates system safety.
+3. **Decision Engine** maps the verdict to an action.
+4. **Dashboard** displays the result and logs events.
+
+```
+Raw Packet Input
+        │
+        ▼
+Parser Layer
+        │
+        ▼
+Physics Validation + Simulation
+        │
+        ▼
+Verdict: SAFE / WARNING / DANGER
+        │
+        ▼
+Decision Action (ALLOW / ALERT / BLOCK)
+        │
+        ▼
+Dashboard Display
+```
+
+---
+
 # System Requirements
 
 ## Hardware

@@ -51,18 +51,37 @@ python -m dashboard.dashboard
 
 ## Project Workflow
 
+The VoltGuard integration workflow is designed for a physics-aware industrial monitoring pipeline.
+
 ```
-User Input / Parser
+Raw Packet Input
         │
         ▼
- Physics Module
+Parser Layer (parser/parser.py)
         │
         ▼
-SAFE / WARNING / DANGER
+Normalized Command
         │
         ▼
- PyQt Dashboard
+Physics Validation + Simulation (physics/validator.py + physics/simulation.py)
+        │
+        ▼
+Verdict: SAFE / WARNING / DANGER
+        │
+        ▼
+Decision Mapping (decision/decision.py)
+        │
+        ▼
+Dashboard / Live Monitoring (dashboard/dashboard_gui.py)
 ```
+
+### Detailed flow
+
+- `parser/parser.py` validates and parses raw packet payloads into numeric command fields.
+- `physics/validator.py` checks for missing or negative values.
+- `physics/simulation.py` evaluates the validated values against safety thresholds.
+- `decision/decision.py` converts the physics verdict into a concrete action (`ALLOW`, `ALERT`, or `BLOCK`).
+- The dashboard displays live events and logs the result.
 
 ## Developed By
 
