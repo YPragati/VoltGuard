@@ -16,8 +16,26 @@ bool ModbusParser::parsePacket(const unsigned char* data, int length)
 //-------------
     int transactionId = (data[0] << 8) | data[1];
     int protocolId = (data[2] << 8) | data[3];
+
+    if (protocolId != 0)
+{
+    std::cout << "Invalid Modbus Protocol ID: " << protocolId << std::endl;
+    return false;
+}
+
+
     int modbusLength = (data[4] << 8) | data[5];
+
+    if (modbusLength != length - 6)
+{
+    std::cout << "Invalid Modbus Length field." << std::endl;
+    return false;
+}
+
+
     int unitId = data[6];
+
+
 //-------------    
 //  Modbus PDU 
 //-------------   
@@ -78,6 +96,14 @@ if (functionCode == 16)
     default:
         functionName = "Unknown";
 }
+if (functionName == "Unknown")
+{
+    std::cout << "Unsupported Function Code: "
+              << functionCode << std::endl;
+    return false;
+}
+
+
 
     std::ofstream out("parser/output.json", std::ios::out | std::ios::trunc);
 
