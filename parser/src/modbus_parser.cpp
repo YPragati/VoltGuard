@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 bool ModbusParser::parsePacket(const unsigned char* data, int length)
 {
@@ -25,16 +26,25 @@ bool ModbusParser::parsePacket(const unsigned char* data, int length)
 
     int startAddress = (data[8] << 8) | data[9];
 
-int value;
-if (functionCode == 6)
+    int value = (data[10] << 8) | data[11];
+
+int byteCount = 0;
+
+if (functionCode == 16)
 {
-    value = (data[10] << 8) | data[11];
-}
-else
-{
-    value = (data[10] << 8) | data[11]; // Quantity for read requests
+    byteCount = data[12];
 }
 
+std::vector<int> registerValues;
+
+if (functionCode == 16)
+{
+    for (int i = 13; i < 13 + byteCount; i += 2)
+    {
+        int regValue = (data[i] << 8) | data[i + 1];
+        registerValues.push_back(regValue);
+    }
+}
     switch (functionCode)
 {
     case 1:
@@ -92,12 +102,29 @@ if (functionCode == 6)
 {
     out << "  \"register_value\": " << value << "\n";
 }
+else if (functionCode == 16)
+{
+    out << "  \"quantity\": " << value << ",\n";
+    out << "  \"byte_count\": " << byteCount << ",\n";
+
+    out << "  \"register_values\": [";
+
+    for (size_t i = 0; i < registerValues.size(); i++)
+    {
+        out << registerValues[i];
+
+        if (i != registerValues.size() - 1)
+        {
+            out << ", ";
+        }
+    }
+
+    out << "]\n";
+}
 else
 {
     out << "  \"quantity\": " << value << "\n";
 }
-    
-    std::cout << "DEBUG functionName = " << functionName << std::endl;
 
     out << "}\n";
     out.flush();
@@ -113,22 +140,33 @@ else
           << " (" << functionName << ")"
           << std::endl;
 
-    std::cout << "Starting Address: " << startAddress << std::endl;
-    if (functionCode == 6)
+   
+   if (functionCode == 6)
 {
     std::cout << "Register Address: " << startAddress << std::endl;
     std::cout << "Register Value: " << value << std::endl;
+}
+else if (functionCode == 16)
+{
+    std::cout << "Starting Address: " << startAddress << std::endl;
+    std::cout << "Quantity: " << value << std::endl;
+    std::cout << "Byte Count: " << byteCount << std::endl;
+    std::cout << "Register Values: ";
+
+for (int value : registerValues)
+{
+    std::cout << value << " ";
+}
+
+std::cout << std::endl;
 }
 else
 {
     std::cout << "Starting Address: " << startAddress << std::endl;
     std::cout << "Quantity: " << value << std::endl;
-}
-    
+} 
     std::cout << "Packet received." << std::endl;
     std::cout << "Packet Length: " << length << std::endl;
-
-    out.close();
 
     return true;
 }
