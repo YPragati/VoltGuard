@@ -1,5 +1,7 @@
 import json
 
+from ips.firewall import inspect_packet
+
 from physics.physics import process_command
 
 
@@ -33,5 +35,16 @@ if __name__ == "__main__":
 
     result = process_command(command)
 
-    print("Machine Status:")
-    print(result)
+    firewall_result = inspect_packet(result)
+
+    print("\nMachine Status:")
+    print(result["status"])
+
+    print("\nSecurity Alert:")
+    print(result["security_alert"])
+
+    print("\nReason:")
+    print(result["reason"])
+
+    print("\nIPS Action:")
+    print(firewall_result["action"])

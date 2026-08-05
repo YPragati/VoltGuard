@@ -17,6 +17,7 @@ from PyQt5.QtCore import Qt, QTimer
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from physics.physics import process_command
+from ips.firewall import inspect_packet
 
 def load_parser_data():
 
@@ -293,6 +294,30 @@ health_box.setFixedHeight(100)
 
 right_layout.addWidget(health_box)
 
+# ============================
+# Cyber Security Panel
+# ============================
+
+security_box = QGroupBox("🛡️ Network Security")
+
+security_layout = QVBoxLayout()
+
+security_label = QLabel("Network Status: SECURE")
+security_label.setAlignment(Qt.AlignCenter)
+
+security_label.setStyleSheet("""
+font-size:16px;
+font-weight:bold;
+color:#22C55E;
+""")
+
+security_layout.addWidget(security_label)
+
+security_box.setLayout(security_layout)
+security_box.setFixedHeight(100)
+
+left_layout.addWidget(security_box)
+
 
 
 alarm_box = QGroupBox("🚨 Alarm Panel")
@@ -422,7 +447,11 @@ def refresh_data():
         demo_index = (demo_index + 1) % len(demo_values)
         
 
-        status = process_command(command)
+        result = process_command(command)
+
+        firewall_result = inspect_packet(result)
+
+        status = result["status"]
 
         # Update progress bars
         rpm_bar.setValue(command["rpm"])
@@ -545,6 +574,40 @@ def refresh_data():
 
             alarm_label.setText("🚨 CRITICAL ALERT")
             alarm_label.setStyleSheet("color:#EF4444;font-size:18px;font-weight:bold;")
+
+
+        if firewall_result["action"] == "ALLOW":
+
+                security_label.setText(
+                    " 🟢 Network Secure\n Packet Allowed "
+                )
+
+                security_label.setStyleSheet(
+                    "color:#22C55E;font-size:16px;font-weight:bold;"
+                )
+
+        elif firewall_result["action"] == "MONITOR":
+
+                security_label.setText(
+                    "🟡 Monitoring\nAbnormal Behaviour"
+                )
+
+                security_label.setStyleSheet(
+                    "color:#FACC15;font-size:16px;font-weight:bold;"
+                )
+
+        else:
+
+                security_label.setText(
+                    "🔴 THREAT BLOCKED\nIPS Action Taken"
+                )
+
+                security_label.setStyleSheet(
+                    "color:#EF4444;font-size:16px;font-weight:bold;"
+                )
+
+
+
 
         # Event Log
         time = datetime.now().strftime("%H:%M:%S")
