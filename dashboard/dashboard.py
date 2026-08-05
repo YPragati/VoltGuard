@@ -156,6 +156,41 @@ main_layout.addWidget(clock)
 
 main_layout.addWidget(title)
 
+# ============================
+# System Overview
+# ============================
+
+overview_box = QGroupBox("📌 System Overview")
+
+overview_layout = QVBoxLayout()
+
+overview_text = QLabel(
+    
+    "Current motor status is continuously monitored using RPM, "
+    "pressure, and flow rate sensors.\n""The system automatically "
+    "detects SAFE, WARNING, and DANGER conditions."
+)
+
+
+overview_text.setWordWrap(True)
+
+overview_text.setStyleSheet("""
+font-size:15px;
+color:#E2E8F0;
+padding:10px;
+font-weight:bold;
+""")
+
+overview_layout.addWidget(overview_text)
+
+overview_box.setLayout(overview_layout)
+overview_box.setMaximumHeight(150)
+
+main_layout.addWidget(overview_box)
+
+
+
+
 content_layout = QHBoxLayout()
 
 left_layout = QVBoxLayout()
@@ -304,17 +339,27 @@ right_layout.addWidget(log_box,2)
 # Live Sensor Graph
 # ============================
 
-graph_box = QGroupBox("📈 Live Sensor Graph")
-
+graph_box = QGroupBox("📈 📈 Real-Time Sensor Graph")
 
 
 graph_layout = QVBoxLayout()
 
-figure = Figure(figsize=(8,4))
+figure = Figure(figsize=(8, 4), facecolor="#1E293B")
 
 canvas = FigureCanvas(figure)
 
 ax = figure.add_subplot(111)
+
+# Dashboard styling
+ax.set_facecolor("#0F172A")
+ax.set_title("Live Sensor Trends", color="white", fontsize=14, fontweight="bold")
+ax.set_xlabel("Time", color="white")
+ax.set_ylabel("Value", color="white")
+
+ax.tick_params(axis='x', colors='white')
+ax.tick_params(axis='y', colors='white')
+
+ax.grid(True, linestyle="--", alpha=0.3)
 
 # Store graph data
 rpm_history = []
@@ -323,7 +368,7 @@ flow_history = []
 
 # Demo Mode Sensor Values
 demo_index = 0
-
+graph_layout
 demo_values = [
     {
         "rpm": 1000,
@@ -396,21 +441,77 @@ def refresh_data():
         pressure_history[:] = pressure_history[-10:]
         flow_history[:] = flow_history[-10:]
 
-        # Draw graph
+
+
+  # Draw graph
+       
         ax.clear()
 
-        ax.plot(rpm_history, marker="o",label="RPM", color="blue", linewidth=2)
-        ax.plot(pressure_history,marker="o", label="Pressure", color="orange", linewidth=2)
-        ax.plot(flow_history,marker="o", label="Flow Rate", color="green", linewidth=2)
+        # Dark industrial theme
+        ax.set_facecolor("#0F172A")
 
-        ax.set_title("Live Sensor Trends")
-        ax.legend()
-        ax.grid(True)
+        # Plot sensor trends
+        ax.plot(
+            rpm_history,
+            label="RPM",
+            color="#3B82F6",
+            linewidth=2.5,
+            marker="o",
+            markersize=4
+        )
+
+        ax.plot(
+            pressure_history,
+            label="Pressure",
+            color="#F59E0B",
+            linewidth=2.5,
+            marker="s",
+            markersize=4
+        )
+
+        ax.plot(
+            flow_history,
+            label="Flow Rate",
+            color="#22C55E",
+            linewidth=2.5,
+            marker="^",
+            markersize=4
+        )
+
+        # Title
+        ax.set_title(
+            "Live Sensor Trends",
+            fontsize=14,
+            fontweight="bold",
+            color="white"
+        )
+
+        # Axis labels
+        ax.set_xlabel("Readings", color="white")
+        ax.set_ylabel("Sensor Values", color="white")
+
+        # White axis text
+        ax.tick_params(axis="x", colors="white")
+        ax.tick_params(axis="y", colors="white")
+
+        # Light grid
+        ax.grid(True, linestyle="--", alpha=0.3)
+
+        # White border
+        for spine in ax.spines.values():
+            spine.set_color("white")
+
+        # Legend
+        legend = ax.legend(
+            loc="upper left",
+            facecolor="#1E293B",
+            edgecolor="white"
+        )
+
+        for text in legend.get_texts():
+            text.set_color("white")
 
         canvas.draw()
-        
-
-
 
 
 
@@ -422,7 +523,7 @@ def refresh_data():
             status_label.setText("🟢 SAFE")
             status_label.setStyleSheet("font-size:32px;font-weight:bold;color:#22C55E;")
             health_bar.setValue(100)
-            health_bar.setFormat("Health: 0%")
+            health_bar.setFormat("Health: 100%")
 
             alarm_label.setText("✅ No Active Alarm")
             alarm_label.setStyleSheet("color:#22C55E;font-size:18px;font-weight:bold;")
@@ -549,7 +650,7 @@ left_layout.addWidget(alarm_box)
 
 left_layout.addStretch()
 
-footer = QLabel("Developed by Team VoltGuard | Industrial Safety Monitoring System")
+footer = QLabel("Developed by Team 03-VoltGuard | Industrial Safety Monitoring System")
 
 footer.setAlignment(Qt.AlignCenter)
 
