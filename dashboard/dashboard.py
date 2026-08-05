@@ -391,6 +391,9 @@ rpm_history = []
 pressure_history = []
 flow_history = []
 
+expected_pressure_history = []
+
+
 # Demo Mode Sensor Values
 demo_index = 0
 graph_layout
@@ -444,6 +447,9 @@ def refresh_data():
 
         command = demo_values[demo_index]
 
+        # Physics prediction model
+        expected_pressure = command["rpm"] * 0.02
+
         demo_index = (demo_index + 1) % len(demo_values)
         
 
@@ -462,6 +468,7 @@ def refresh_data():
         # Store latest values
         rpm_history.append(command["rpm"])
         pressure_history.append(command["pressure"])
+        expected_pressure_history.append(expected_pressure)
         flow_history.append(command["flow_rate"])
 
 
@@ -469,7 +476,7 @@ def refresh_data():
         rpm_history[:] = rpm_history[-10:]
         pressure_history[:] = pressure_history[-10:]
         flow_history[:] = flow_history[-10:]
-
+        expected_pressure_history[:] = expected_pressure_history[-10:]
 
 
   # Draw graph
@@ -491,10 +498,10 @@ def refresh_data():
 
         ax.plot(
             pressure_history,
-            label="Pressure",
-            color="#F59E0B",
-            linewidth=2.5,
-            marker="s",
+            label="Expected Pressure",
+            color="#FFFFFF",
+            linewidth=2,
+            marker="x",
             markersize=4
         )
 
