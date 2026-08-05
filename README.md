@@ -1,58 +1,161 @@
+# VoltGuard
 
-# ⚡ VoltGuard
+## Physics-Based Intrusion Prevention System for Industrial Control Networks
 
+---
 
-VoltGuard is an industrial machine-monitoring and safety system developed in Python. The project monitors machine parameters, analyses them using a physics-based decision engine, and displays the machine condition through an interactive PyQt5 dashboard.
+## 📌 Project Overview
 
-The system classifies machine health into:
+**VoltGuard** is a physics-based Intrusion Prevention System (IPS) designed to protect Industrial Control Systems (ICS) and Operational Technology (OT) networks from malicious or unsafe control commands.
 
-- 🟢 SAFE
-- 🟡 WARNING
-- 🔴 DANGER
+Traditional industrial cybersecurity solutions mainly depend on known attack signatures. VoltGuard introduces an additional security layer by validating incoming machine commands against physical operating limits.
 
+The system monitors industrial parameters such as:
 
-## Problem Statement
-Standard IT firewalls analyze packets, but they don't understand physics. If malware sends a perfectly formatted command telling industrial equipment (like a pump) to operate outside safe limits, a normal firewall allows it because the syntax is correct — this can cause real physical damage.
+* Motor Speed (RPM)
+* Pressure
+* Flow Rate
 
-## The Idea
-VoltGuard acts as a **"Physics Firewall."** It reads incoming industrial network commands (Modbus/DNP3) and runs them through a real-time physics simulation *before* they reach the actual machinery. If the simulation predicts the command will cause an unsafe state (like pressure exceeding safe limits), it blocks the command and raises an alarm.
+and determines whether the command is:
 
-## Key Modules
-- **Packet Interceptor (C++ & Scapy):** Reads and parses raw SCADA/Modbus network traffic.
-- **Physics Engine (Python & OpenModelica):** Simulates the physical constraints (pressure, flow limits) of a mock industrial pipeline.
-- **Decision Engine (Rust):** Fast logic that blocks commands if the simulation predicts failure.
-- **Native Dashboard (C++/Qt):** Offline desktop dashboard for operators to view blocked commands and system health.
+* ✅ SAFE
+* ⚠️ WARNING
+* 🔴 DANGER
 
+Unsafe commands are detected and blocked using an IPS decision engine.
 
+---
 
-## 🛠 Tech Stack
+# 🎯 Objectives
 
-### Languages
-- Python
+The main objectives of VoltGuard are:
 
-### GUI Framework
-- PyQt5
+* Parse industrial communication protocols such as Modbus/TCP
+* Simulate normal and malicious industrial commands
+* Validate commands using physics-based rules
+* Detect abnormal machine behaviour
+* Prevent unsafe commands from reaching industrial equipment
+* Provide real-time monitoring through an industrial dashboard
 
-### Version Control
-- Git
-- GitHub
+---
 
-### Development Environment
-- Visual Studio Code
-- PowerShell
+# 🏗️ System Architecture
 
-### Programming Concepts
-- Object-Oriented Programming (OOP)
-- Modular Programming
+```
+              Modbus TCP Traffic
+                     |
+                     ↓
+            C++ Protocol Parser
+                     |
+                     ↓
+              Python Controller
+                     |
+        -----------------------------
+        |                           |
+        ↓                           ↓
+ Physics Validation            Security Engine
+        |                           |
+        ↓                           ↓
+ SAFE / WARNING / DANGER     ALLOW / MONITOR / BLOCK
+                     |
+                     ↓
+             PyQt Industrial Dashboard
+                     |
+                     ↓
+       Real-Time Sensor Visualization
+       Predicted vs Actual Monitoring
+```
 
-### Python Libraries
-- PyQt5
-- sys
-- os
-- datetime
-- json
+---
 
+# ⚙️ Key Features
 
+## 🔹 Modbus Communication Monitoring
+
+* Parses simulated Modbus/TCP packets
+* Extracts industrial register values
+* Converts raw register data into machine parameters
+
+Supported parameters:
+
+| Parameter | Description     |
+| --------- | --------------- |
+| RPM       | Motor speed     |
+| Pressure  | System pressure |
+| Flow Rate | Fluid flow      |
+
+---
+
+## 🔹 Physics-Based Detection Engine
+
+VoltGuard does not rely only on network signatures.
+
+It checks whether commands are physically possible.
+
+Example:
+
+```
+Pressure > Maximum Limit
+        ↓
+Possible Industrial Attack
+        ↓
+DANGER
+```
+
+Implemented safety limits:
+
+```
+Maximum RPM       : 5000
+Maximum Pressure  : 120
+Maximum Flow Rate : 1000
+Minimum Pressure  : 20
+```
+
+---
+
+## 🔹 IPS Firewall Decision Layer
+
+The IPS evaluates the physics result and takes action:
+
+| Machine Status | IPS Action |
+| -------------- | ---------- |
+| SAFE           | ALLOW      |
+| WARNING        | MONITOR    |
+| DANGER         | BLOCK      |
+
+Example:
+
+```
+Malicious Command
+        ↓
+Physics Engine
+        ↓
+DANGER
+        ↓
+IPS BLOCK
+```
+
+---
+
+# 🖥️ Industrial Dashboard
+
+The VoltGuard dashboard is built using:
+
+* PyQt5
+* Matplotlib
+
+Dashboard features:
+
+✅ Machine status monitoring
+✅ Sensor value display
+✅ Health indicator
+✅ Alarm panel
+✅ Event logging
+✅ Real-time sensor graph
+✅ Network security monitoring
+✅ Predicted vs Actual physics comparison
+
+---
 
 # 📂 Project Structure
 
@@ -62,197 +165,240 @@ VoltGuard/
 ├── dashboard/
 │   └── dashboard.py
 │
-├── parser/
-│   ├── include/
-│   ├── src/
-│   └── output.json
-│
 ├── physics/
 │   ├── physics.py
 │   ├── validator.py
-│   ├── calculations.py
-│   └── simulation.py
+│   ├── simulation.py
+│   └── constants.py
 │
-├── docs/
-│   └── integration.md
+├── ips/
+│   ├── firewall.py
+│   └── __init__.py
 │
-├── tests/
+├── parser/
+│   ├── C++ Modbus Parser
+│   └── output.json
 │
-├── logs/
-│
+├── modbus_reader.py
+├── modbus_sender.py
+├── scapy_test.py
 ├── main.py
 │
+├── requirements.txt
 └── README.md
 ```
 
 ---
 
-# ⚙ System Workflow
+# 🚀 Installation
 
-The VoltGuard pipeline consists of three main stages:
-
-1. Parser: reads incoming packet data and converts it into machine parameters.
-2. Physics Engine: validates the parameters and evaluates the machine state.
-3. Decision + Dashboard: maps the verdict to an action and shows the result.
-
-```
-Machine Input / Packet Parser
-      │
-      ▼
-Validated Machine Command
-      │
-      ▼
-Physics Engine / Simulation
-      │
-      ▼
-Verdict: SAFE / WARNING / DANGER
-      │
-      ▼
-Decision Engine / Action
-      │
-      ▼
-Dashboard Display + Event Log
-```
-
-# 🚀 Features
-
-✅ Industrial Dashboard
-
-✅ Machine Parameter Input
-
-- RPM
-- Pressure
-- Flow Rate
-
-✅ Physics Engine Integration
-
-✅ Machine Health Indicator
-
-✅ Alarm Panel
-
-✅ Event Log
-
-✅ Sensor Progress Bars
-
-✅ Digital Clock
-
-✅ Status Detection
-
-- SAFE
-- WARNING
-- DANGER
-
----
-
-# ▶ Running the Project
-
-Clone repository
+## Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/YPragati/VoltGuard.git
 ```
 
-Open project
+Move into project directory:
 
 ```bash
 cd VoltGuard
 ```
 
-Install dependencies
+---
+
+## Install Dependencies
 
 ```bash
-pip install PyQt5
+pip install -r requirements.txt
 ```
 
-Run dashboard
+Required libraries:
+
+* PyQt5
+* Matplotlib
+* Scapy
+* pymodbus
+
+---
+
+# ▶️ Running the Project
+
+## Run Physics Engine Test
+
+```bash
+python main.py
+```
+
+Example output:
+
+```
+Machine Values:
+{
+'rpm':3000,
+'pressure':80,
+'flow_rate':500
+}
+
+Machine Status:
+SAFE
+
+IPS Action:
+ALLOW
+```
+
+---
+
+## Run Dashboard
 
 ```bash
 python -m dashboard.dashboard
 ```
 
----
+The dashboard displays:
 
-# 📊 Sample Input
-
-| RPM | Pressure | Flow Rate |
-|-----|----------|-----------|
-|3000|80|500|
-
-Output
-
-🟢 SAFE
+* Machine condition
+* Sensor values
+* Security status
+* Real-time graphs
 
 ---
 
-| RPM | Pressure | Flow Rate |
-|-----|----------|-----------|
-|6000|160|700|
+# 🧪 Testing Scenarios
 
-Output
+## Test 1: Normal Command
 
-🟡 WARNING
-
----
-
-| RPM | Pressure | Flow Rate |
-|-----|----------|-----------|
-|8000|220|950|
-
-Output
-
-🔴 DANGER
-
----
-
-# 📷 Dashboard
-
-(Add dashboard screenshot here)
-
----
-
-# 👥 Team Members
-
-| Member | Responsibility |
-|---------|----------------|
-| Member 1 | Packet Parser |
-| Member 2 (Team Lead) | Physics Engine, Git Management, Dashboard Development, Module Integration, Documentation |
-| Member 3 | Testing & Documentation |
-
----
-
-# 📄 Documentation
-
-Additional project documentation is available in:
+Input:
 
 ```
-docs/integration.md
+RPM: 3000
+Pressure: 80
+Flow Rate: 500
+```
+
+Result:
+
+```
+SAFE
+ALLOW
 ```
 
 ---
 
-# 🔮 Future Improvements
+## Test 2: Abnormal Condition
 
-- Real sensor integration
-- Database connectivity
-- Live industrial monitoring
-- Historical data analysis
-- Email/SMS alert system
-- AI-based predictive maintenance
+Input:
+
+```
+Pressure: 10
+```
+
+Result:
+
+```
+WARNING
+MONITOR
+```
+
+Reason:
+
+```
+Pressure below safe operating range
+```
 
 ---
 
-## Status
-## 📌 Status
+## Test 3: Malicious Command
 
-✅ Week 4 Completed
+Input:
 
-Current Features:
-- Dashboard Integration
-- Physics Engine
-- Alarm Panel
-- Event Log
-- Machine Health Indicator
-- Sensor Monitoring
-- Git Integration
+```
+RPM: 7000
+Pressure: 150
+```
 
-Project Status: Under Final Testing
+Result:
+
+```
+DANGER
+BLOCK
+```
+
+Reason:
+
+```
+Physical limit exceeded
+Possible industrial attack detected
+```
+
+---
+
+# 🔐 Cybersecurity Approach
+
+VoltGuard provides security through:
+
+### Traditional Approach
+
+```
+Packet Signature Detection
+```
+
+### VoltGuard Approach
+
+```
+Network Command
+        +
+Physical Behaviour Validation
+        +
+IPS Decision
+```
+
+This allows detection of attacks that may appear valid at the protocol level but are physically unsafe.
+
+---
+
+# 🌐 Future Deployment
+
+The system architecture supports deployment on an edge computing device such as:
+
+* Raspberry Pi
+* Industrial Edge Gateway
+
+Deployment concept:
+
+```
+PLC
+ |
+ |
+Ethernet
+ |
+Raspberry Pi Edge Device
+ |
+ |-- Modbus Parser
+ |-- Physics Engine
+ |-- IPS Firewall
+ |
+Machine Network
+```
+
+The edge device can operate as a **bump-in-the-wire IPS**, inspecting commands before they reach industrial equipment.
+
+---
+
+# 👥 Team
+
+**Team 03 - VoltGuard**
+
+Project developed as part of an Industrial Cybersecurity Internship.
+
+---
+
+# 📌 Conclusion
+
+VoltGuard demonstrates a physics-aware cybersecurity approach for industrial environments by combining:
+
+* Industrial protocol analysis
+* Physics-based anomaly detection
+* Intrusion prevention
+* Real-time monitoring
+
+The project provides a foundation for protecting future Industrial Control Systems against cyber-physical attacks.
